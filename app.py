@@ -2,7 +2,8 @@ import streamlit as st
 import plotly.graph_objects as go 
 import pandas as pd
 from inventory_rec import inventory_recommendations
-from data_loader_eda import get_data
+from src.data_loader_eda import get_data
+from src.forecast import load_forecast
 
 df, df_test = get_data()
 
@@ -27,7 +28,7 @@ fig.add_scatter(x=forecast['date'].tolist() + forecast['date'].tolist()[::-1],
 
 st.plotly_chart(fig, use_container_width=True)
 
-rec = inventory_recommendations(forecast['mean'].sum(), forecast['std'].mean())
+rec = inventory_recommendations(forecast_mean=forecast['mean'].sum(), forecast_std=forecast['std'].mean())
 col1, col2, col3, col4 = st.columns(4)
 col1.metric('30-day forecast', f'{int(rec['forecast_next_30d']):,} units')
 col2.metric('Safety stock', f'{int(rec['safety_stock']):,} units')
